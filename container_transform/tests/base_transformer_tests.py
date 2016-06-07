@@ -12,8 +12,7 @@ class BaseTransformerTests(TestCase):
     def test_base_transformer_has_all_methods(self):
         """
         Test to confirm that the BaseTransformer has methods (abstract or
-        otherwise) for each possible parameter (except for ``build`` and
-        ``essential``).
+        otherwise) for each possible parameter (except for ``build``).
         """
 
         available_params = set(ARG_MAP.keys())
@@ -23,10 +22,10 @@ class BaseTransformerTests(TestCase):
 
         self.assertEqual(
             available_params.difference(emit_methods),
-            {'build', 'essential'}
+            {'build'}
         )
 
         self.assertEqual(
             available_params.difference(ingest_methods),
-            {'build', 'essential'}
+            {'build'}
         )

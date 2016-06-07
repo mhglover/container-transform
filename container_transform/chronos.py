@@ -266,6 +266,12 @@ class ChronosTransformer(BaseTransformer):
             for mapping
             in port_mappings]
 
+    def ingest_essential(self, essential):
+        return essential
+
+    def emit_essential(self, essential):
+        return essential
+
     def ingest_memory(self, memory):
         return memory << 20
 

@@ -123,6 +123,12 @@ class SystemdTransformer(BaseTransformer):
         """
         return [str(self._emit_mapping(mapping)) for mapping in port_mappings]
 
+    def ingest_essential(self, essential):
+        pass
+
+    def emit_essential(self, essential):
+        return essential
+
     def ingest_memory(self, memory):
         pass
 

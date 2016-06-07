@@ -162,6 +162,18 @@ class ComposeTransformer(BaseTransformer):
         """
         return [str(self._emit_mapping(mapping)) for mapping in port_mappings]
 
+    def ingest_essential(self, essential):
+        if type(essential) is dict:
+            essential = essential['Name']
+        if essential == 'false' or essential == 'no':
+            return False
+        else:
+            return True
+
+    def emit_essential(self, essential):
+        if essential:
+            return {'MaximumRetryCount': 0, 'Name': str(essential).lower()}
+
     def ingest_memory(self, memory):
         """
         Transform the memory into bytes

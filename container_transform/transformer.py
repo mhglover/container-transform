@@ -5,6 +5,7 @@ methods should produce and accept (respectively)"""
 SCHEMA = {
     'image': str,
     'name': str,
+    'essential': bool,
     'cpu': int,  # out of 1024
     'memory': int,  # in bytes
     'links': list,  # This is universal across formats
@@ -205,6 +206,14 @@ class BaseTransformer(object, metaclass=ABCMeta):
 
     @abstractmethod
     def emit_port_mappings(self, port_mappings):
+        raise NotImplementedError
+
+    @abstractmethod
+    def ingest_essential(self, essential):
+        raise NotImplementedError
+
+    @abstractmethod
+    def emit_essential(self, essential):
         raise NotImplementedError
 
     @abstractmethod

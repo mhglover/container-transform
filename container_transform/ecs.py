@@ -101,7 +101,8 @@ class ECSTransformer(BaseTransformer):
 
     @staticmethod
     def validate(container):
-        container['essential'] = True
+        if 'essential' not in container:
+            container['essential'] = True
 
         container_name = container.get('name')
 
@@ -151,6 +152,12 @@ class ECSTransformer(BaseTransformer):
 
     def emit_port_mappings(self, port_mappings):
         return [self._emit_mapping(mapping) for mapping in port_mappings]
+
+    def ingest_essential(self, essential):
+        return essential
+
+    def emit_essential(self, essential):
+        return essential
 
     def ingest_memory(self, memory):
         return memory << 20
