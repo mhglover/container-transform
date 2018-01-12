@@ -217,18 +217,22 @@ class ComposeTransformer(BaseTransformer):
         if type(environment) is list:
             for kv in environment:
                 index = kv.find('=')
-                output[str(kv[:index])] = str(kv[index + 1:])
+                output[str(kv[:index])] = str(kv[index + 1:]).replace('$$', '$')
         if type(environment) is dict:
             for key, value in environment.items():
-                output[str(key)] = str(value)
+                output[str(key)] = str(value).replace('$$', '$')
         return output
 
     def emit_environment(self, environment):
+        # Use double-dollar and avoid vairable substitution. Reference,
+        # https://docs.docker.com/compose/compose-file/compose-file-v2
+        for key, value in environment.items():
+            environment[key] = str(value).replace('$', '$$')
         return environment
 
     def ingest_command(self, command):
         if isinstance(command, list):
-            command = ' '.join(command)
+            return self._list2cmdline(command)
         return command
 
     def emit_command(self, command):
@@ -236,7 +240,7 @@ class ComposeTransformer(BaseTransformer):
 
     def ingest_entrypoint(self, entrypoint):
         if isinstance(entrypoint, list):
-            entrypoint = ' '.join(entrypoint)
+            return self._list2cmdline(entrypoint)
         return entrypoint
 
     def emit_entrypoint(self, entrypoint):
@@ -320,7 +324,7 @@ class ComposeTransformer(BaseTransformer):
 
     @staticmethod
     def _emit_volume(volume):
-        volume_str = volume.get('host') + ':' + volume.get('container', ':')
+        volume_str = '{0}:{1}'.format(volume.get('host'), volume.get('container', ':'))
         volume_str = volume_str.strip(':')
 
         if volume.get('readonly') and len(volume_str):
@@ -360,3 +364,9 @@ class ComposeTransformer(BaseTransformer):
 
     def emit_logging(self, logging):
         return logging
+
+    def ingest_privileged(self, privileged):
+        return privileged
+
+    def emit_privileged(self, privileged):
+        return privileged

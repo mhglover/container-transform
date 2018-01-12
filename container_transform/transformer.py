@@ -1,3 +1,4 @@
+import shlex
 from abc import ABCMeta, abstractmethod
 
 """The SCHEMA defines the argument format the .ingest_*() and .emit_*()
@@ -18,6 +19,7 @@ SCHEMA = {
         'container_ip': str,
         'container_port': int,
         'protocol': 'tcp' or 'udp',
+        'name': str,
     }],
     'environment': dict,  # A simple key: value dictionary
     'entrypoint': str,  # An unsplit string
@@ -46,6 +48,21 @@ class BaseTransformer(object, metaclass=ABCMeta):
         normalized_keys = transformer.ingest_containers()
 
     """
+    @staticmethod
+    def _list2cmdline(commands):
+        def quote(cmd):
+            """
+            Make sure that each cmd in command list will be treated as a single token
+            :param cmd: str
+            :return:
+            """
+            if len(shlex.split(cmd)) == 1:
+                # Already a single token, do nothing
+                return cmd
+            else:
+                return shlex.quote(cmd)
+
+        return ' '.join(quote(cmd) for cmd in commands)
 
     def _read_file(self, filename):
         """
@@ -257,25 +274,9 @@ class BaseTransformer(object, metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def ingest_volumes_from(self, volumes_from):
-        raise NotImplementedError
-
-    @abstractmethod
-    def emit_volumes_from(self, volumes_from):
-        raise NotImplementedError
-
-    @abstractmethod
     def ingest_volumes(self, volumes):
         raise NotImplementedError
 
     @abstractmethod
     def emit_volumes(self, volumes):
-        raise NotImplementedError
-
-    @abstractmethod
-    def emit_logging(self, logging):
-        raise NotImplementedError
-
-    @abstractmethod
-    def ingest_logging(self, logging):
         raise NotImplementedError
