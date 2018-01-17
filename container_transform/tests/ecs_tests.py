@@ -73,3 +73,54 @@ class ECSTransformerTests(TestCase):
         self.assertEqual(
             self.transformer.emit_essential('testing'),
             'testing')
+
+    def test_emit_containers(self):
+        """
+        Test .emit_containers() output with and without a networkmode
+        """
+        containers = [{
+            'image': 'postgres:9.3',
+            'cpu': 200,
+        }]
+
+        # test with no networkmode
+        output = self.transformer.emit_containers(containers)
+
+        expected = (
+            '{\n'
+            '    "containerDefinitions": [\n'
+            '        {\n'
+            '            "cpu": 200,\n'
+            '            "image": "postgres:9.3"\n'
+            '        }\n'
+            '    ],\n'
+            '    "family": "pythonapp",\n'
+            '    "volumes": []\n'
+            '}'
+        )
+        self.assertEqual(
+            expected,
+            output
+        )
+
+        self.transformer.ecs_network_mode = 'awsvpc'
+        output = self.transformer.emit_containers(containers)
+
+        expected = (
+            '{\n'
+            '    "containerDefinitions": [\n'
+            '        {\n'
+            '            "cpu": 200,\n'
+            '            "image": "postgres:9.3"\n'
+            '        }\n'
+            '    ],\n'
+            '    "family": "pythonapp",\n'
+            '    "networkMode": "awsvpc",\n'
+            '    "volumes": []\n'
+            '}'
+        )
+
+        self.assertEqual(
+            expected,
+            output
+        )
