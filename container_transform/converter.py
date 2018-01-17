@@ -61,6 +61,12 @@ class Converter(object):
 
             output_containers.append(validated)
 
+        for key in vars(output_transformer):
+            if 'volumes' not in key and hasattr(input_transformer, key):
+                setattr(output_transformer,
+                        key,
+                        getattr(input_transformer, key))
+
         return output_transformer.emit_containers(output_containers, verbose)
 
     def _convert_container(self, container, input_transformer, output_transformer):

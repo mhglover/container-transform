@@ -29,13 +29,15 @@ class ECSTransformer(BaseTransformer):
         :param filename: The file to be loaded
         :type filename: str
         """
-        family, stream, volumes_in = '', None, []
+        family, stream, volumes_in, ecs_network_mode = '', None, [], ''
         if filename:
             self._filename = filename
-            family, stream, volumes_in = self._read_file(filename)
+            family, stream, volumes_in, ecs_network_mode = self._read_file(filename)
+
         self.family = family
         self.stream = stream
         self.volumes_in = volumes_in
+        self.ecs_network_mode = ecs_network_mode
 
         self.volumes = []
 
@@ -54,14 +56,15 @@ class ECSTransformer(BaseTransformer):
         """
         contents = json.load(stream)
 
-        family, containers, volumes = '', contents, []
+        family, containers, volumes, ecs_network_mode = '', contents, [], ''
 
         if isinstance(contents, dict) and 'containerDefinitions' in contents.keys():
             family = contents.get('family', None)
             containers = contents.get('containerDefinitions', [])
             volumes = self.ingest_volumes_param(contents.get('volumes', []))
+            ecs_network_mode = contents.get('ecs_network_mode', '')
 
-        return family, containers, volumes
+        return family, containers, volumes, ecs_network_mode
 
     def ingest_containers(self, containers=None):
         containers = containers or self.stream or {}
@@ -93,8 +96,12 @@ class ECSTransformer(BaseTransformer):
         task_definition = {
             'family': self.family,
             'containerDefinitions': containers,
-            'volumes': self.volumes or []
+            'volumes': self.volumes or [],
         }
+
+        if self.ecs_network_mode:
+            task_definition['networkMode'] = self.ecs_network_mode
+
         if verbose:
             return json.dumps(task_definition, indent=4, sort_keys=True)
         else:

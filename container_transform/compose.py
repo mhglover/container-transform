@@ -35,6 +35,7 @@ class ComposeTransformer(BaseTransformer):
                 self.stream = stream.get('services')
                 self.volumes = stream.get('volumes', None)
                 self.networks = stream.get('networks', None)
+                self.ecs_network_mode = stream.get('ecs_network_mode', '')
             else:
                 self.stream = stream
         else:
