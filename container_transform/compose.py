@@ -164,7 +164,10 @@ class ComposeTransformer(BaseTransformer):
 
     def ingest_essential(self, essential):
         if type(essential) is dict:
-            essential = essential['Name']
+            if 'Name' in essential:
+                essential = essential['Name']
+            else:
+                essential = 'false'
         if essential == 'false' or essential == 'no':
             return False
         else:

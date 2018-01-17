@@ -160,3 +160,53 @@ class ComposeTransformerTests(TestCase):
             self.transformer.ingest_command(command),
             "/bin/echo 'Hello world'"
         )
+
+    def test_ingest_essential_dict(self):
+        """
+        If the 'essential' param is a dict, check the Name field.
+
+        If the Name field is 'false' or 'no' or isn't present, return False.
+        Otherwise return True.
+        """
+        dictionary = {'Name': 'test dictionary'}
+        self.assertEqual(
+            self.transformer.ingest_essential(dictionary),
+            True
+        )
+
+        dictionary = {'Name': 'false'}
+        self.assertEqual(
+            self.transformer.ingest_essential(dictionary),
+            False
+        )
+
+        dictionary = {'NoName': 'false'}
+        self.assertEqual(
+            self.transformer.ingest_essential(dictionary),
+            False
+        )
+
+    def test_ingest_essential(self):
+        """
+        If the 'essential' field is 'no' or 'false' or any other string
+        """
+        self.assertEqual(
+            self.transformer.ingest_essential('no'),
+            False
+        )
+
+        self.assertEqual(
+            self.transformer.ingest_essential('false'),
+            False
+        )
+
+        self.assertEqual(
+            self.transformer.emit_essential('Container_Name'),
+            {'MaximumRetryCount': 0, 'Name': 'container_name'}
+        )
+
+    def test_emit_essential_false(self):
+        self.assertEqual(
+            self.transformer.emit_essential(False),
+            None
+        )
