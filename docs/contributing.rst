@@ -17,7 +17,7 @@ To get the source source code and run the unit tests, run::
 
     git clone git://github.com/micahhausler/container-transform.git
     cd container-transform
-    virtualenv env
+    virtualenv -p python3 env
     . env/bin/activate
     pip install -e .[all]
     python setup.py nosetests
@@ -25,6 +25,12 @@ To get the source source code and run the unit tests, run::
 While 100% code coverage does not make a library bug-free, it significantly
 reduces the number of easily caught bugs! Please make sure coverage is at 100%
 before submitting a pull request!
+
+NB: transformer.py will show a syntax error on BaseTransformer when testing under Python 2.7::
+
+    ERROR: Failure: SyntaxError (invalid syntax (transformer.py, line 25))
+    class BaseTransformer(object, metaclass=ABCMeta):
+
 
 Code Quality
 ------------
