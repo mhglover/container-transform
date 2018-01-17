@@ -24,3 +24,15 @@ class MarathonTransformerTests(TestCase):
                 {'uri': 'hdfs://hdfs.marathon.mesos/path/item.json'}
             ]
         )
+
+    def test_ingest_essential(self):
+        self.assertEqual(
+            self.transformer.ingest_essential('testing'),
+            'testing'
+        )
+
+    def test_emit_essential(self):
+        self.assertEqual(
+            self.transformer.emit_essential('testing'),
+            'testing'
+        )

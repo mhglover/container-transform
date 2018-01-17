@@ -23,7 +23,8 @@ class ECSTransformerTests(TestCase):
         container = {
             'image': 'postgres:9.3',
             'cpu': 200,
-            'memory': 40
+            'memory': 40,
+            'essential': True
         }
 
         validated = self.transformer.validate(container)
@@ -31,7 +32,6 @@ class ECSTransformerTests(TestCase):
             validated['name'],
             mock_uuid.return_value
         )
-        self.assertTrue(validated['essential'])
 
     def test_ingest_cpu(self):
         cpu = 100
@@ -68,3 +68,8 @@ class ECSTransformerTests(TestCase):
             self.transformer.emit_command(command),
             ["/bin/echo", "Hello world"]
         )
+
+    def test_emit_essential(self):
+        self.assertEqual(
+            self.transformer.emit_essential('testing'),
+            'testing')

@@ -333,6 +333,12 @@ class KubernetesTransformer(BaseTransformer):
     def emit_environment(self, environment):
         return [{'name': k, 'value': v} for k, v in environment.items()]
 
+    def ingest_essential(self, essential):
+        raise NotImplementedError
+
+    def emit_essential(self, essential):
+        raise NotImplementedError
+
     def ingest_command(self, command):
         return self._list2cmdline(command)
 

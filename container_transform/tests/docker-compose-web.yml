@@ -1,6 +1,7 @@
 web:
   build: .
   command: uwsgi --json uwsgi.json
+  essential: yes
   mem_limit: 65536k
   environment:
     AWS_ACCESS_KEY_ID:  AAAAAAAAAAAAAAAAAAAA

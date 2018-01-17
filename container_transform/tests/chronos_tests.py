@@ -109,3 +109,9 @@ class ChronosTransformerTests(TestCase):
                 {'key': 'publish', 'value': '53/udp'},
             ]
         )
+
+    def test_emit_essential(self):
+        self.assertEqual(self.transformer.emit_essential('True'), 'True')
+
+    def test_ingest_essential(self):
+        self.assertEqual(self.transformer.ingest_essential('True'), 'True')

@@ -90,6 +90,9 @@ class SystemdTransformerTests(TestCase):
 
     def test_emit_environment(self):
         self.assertEqual(self.transformer.emit_memory('1024'), '1024b')
+    
+    def test_emit_essential(self):
+        self.assertEqual(self.transformer.emit_essential('True'), 'True')
 
     def test_emit_volumes(self):
         volumes = [
